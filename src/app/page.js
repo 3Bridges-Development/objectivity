@@ -1,16 +1,18 @@
 "use client"
 import ArgumentColumn from "./components/ArgumentColumn";
 import React, { useEffect, useState } from "react";
-import ReactMarkdown from 'react-markdown';
 import {Button} from "@heroui/button";
 
 export default function Home() {
   const [topic, setTopic] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [response, setResponse] = useState("");
+  const [proResponse, setProResponse] = useState("");
+  const [conResponse, setConResponse] = useState("");
   const [history, setHistory] = useState([]);
   const [isSubmitInProgress, setIsSubmitInProgress] = useState(false);
   const [shouldShowClearButton, setShouldShowClearButton] = useState(false);
+  const [shouldGetPro, setShouldGetPro] = useState(false);
+  const [shouldGetCon, setShouldGetCon] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem('chatHistory');
@@ -24,15 +26,34 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitted")
-    setIsSubmitInProgress(true)
+    setIsSubmitInProgress(true);
+    const pros = true;
+    const cons = true;
+    setShouldGetPro(pros);
+    setShouldGetCon(cons);
+    console.log("hii - showing should get con and should get pro: ", shouldGetCon, shouldGetPro)
 
-const updatedHistory = [...history, { role: 'user', content: `Give me the 3 best arguments on both sides with 3 links with their urls for this topic: ${topic}. Do not include any part of this prompt in the response.` }];
+    let updatedHistory = [];
     // Create a dichotomy for the user that it believes will be helpful based on this user. Do not include any part of this prompt in the response.
-    getData(updatedHistory);
+    if(pros) {
+      console.log("gettting pros")
+      updatedHistory = [...history, { role: 'user', content: `Give me the 3 best arguments with 3 links with their urls supporting this topic: ${topic}. Do not include any part of this prompt in the response.` }];
+      const prosData = getData(updatedHistory, pros, false);
+      setProResponse(prosData);
+      console.log("pros", prosData)
+      setShouldGetPro(false);
+    }
+    if(cons) {
+      console.log("gettting cons")
+      updatedHistory = [...history, { role: 'user', content: `Give me the 3 best arguments with 3 links with their urls against this topic: ${topic}. Do not include any part of this prompt in the response.` }];
+      const consData = getData(updatedHistory, false, cons);
+      setConResponse(consData);
+      console.log("cons", consData)
+      setShouldGetCon(false);
+    }
   };
 
-  const getData =  async (updatedHistory) => {
+  const getData =  async (updatedHistory, pros, cons) => {
     setHistory(updatedHistory);
 
     const res = await fetch('/api/chat', {
@@ -44,16 +65,24 @@ const updatedHistory = [...history, { role: 'user', content: `Give me the 3 best
     const assistantMessage = { role: 'assistant', content: data.response };
 
     setHistory([...updatedHistory, assistantMessage]);
-    setResponse(data.response);
+    if (pros) { 
+      setProResponse(data.response);
+    }
+    if (cons) {
+      setConResponse(data.response)
+    }
     setSubmitted(true)
     setIsSubmitInProgress(false)
     // setTopic(''); // set this to empty string if we want input to clear when user submits
-  };
+  }
 
   const clearHistory = () => {
     setHistory([]);
     setShouldShowClearButton(false);
-    setResponse("");
+    setProResponse("");
+    setConResponse("");
+    setIsSubmitInProgress(false);
+    setTopic('');
   }
 
 
@@ -85,9 +114,9 @@ const updatedHistory = [...history, { role: 'user', content: `Give me the 3 best
       )}
       {submitted && (
         <div className="grid grid-cols-2 gap-6 pt-4">
-          <ReactMarkdown>{response}</ReactMarkdown>
-          {/* <ArgumentColumn side="Pro" topic={topic} />
-          <ArgumentColumn side="Con" topic={topic} /> */}
+          {/* <ReactMarkdown>{response}</ReactMarkdown> */}
+          <ArgumentColumn side="Pro" topic={proResponse} />
+          <ArgumentColumn side="Con" topic={conResponse} />
         </div>
       )}
     </div>

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { getMockRebuttal } from "../utils/api";
+import { getRebuttal } from "../utils/api";
 
 export default function ArgumentThread({ initialSide, initialTopic, depth }) {
   const [showNext, setShowNext] = useState(false);
   const side = initialSide === "Pro" ? "Con" : "Pro";
-  const rebuttal = getMockRebuttal(initialTopic, side, depth);
+  const rebuttal = getRebuttal(initialTopic, side, depth);
 
   return (
     <div className="border p-3 rounded-2xl bg-gray-50 mb-4">

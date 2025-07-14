@@ -5,9 +5,10 @@ export default function ArgumentColumn({ side, topic }) {
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">{side} Side</h2>
-      {[0, 1, 2].map((i) => (
-        <ArgumentBox key={i} topic={topic} side={side} argumentIndex={i} />
-      ))}
+      {/* {[0,1,2].map((i) => ( */}
+        <ArgumentBox topic={topic} side={side} />
+        {/* <ArgumentBox key={i} topic={topic} side={side} argumentIndex={i} /> */}
+      {/* ))} */}
     </div>
   );
 }

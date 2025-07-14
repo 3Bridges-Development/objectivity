@@ -1,6 +1,7 @@
-export function getMockArgument(topic, side, index) {
+export function getArgument(topic, side, index) {
   return {
-    title: `${side} Argument ${index + 1}`,
+    title: `${side}`,
+    // title: `${side} Argument ${index + 1}`,
     body: [
       `Paragraph 1 of ${side} argument ${index + 1} for topic: ${topic}.`,
       `Paragraph 2 of ${side} argument ${index + 1}.`,
@@ -13,7 +14,7 @@ export function getMockArgument(topic, side, index) {
   };
 }
 
-export function getMockRebuttal(topic, side, depth) {
+export function getRebuttal(topic, side, depth) {
   return {
     body: [
       `Rebuttal paragraph 1 from ${side} side at round ${depth}.`,
