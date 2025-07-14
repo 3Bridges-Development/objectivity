@@ -113,7 +113,7 @@ export default function Home() {
         </div>
       )}
       {submitted && (
-        <div className="grid grid-cols-2 gap-6 pt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
           {/* <ReactMarkdown>{response}</ReactMarkdown> */}
           <ArgumentColumn side="Pro" topic={proResponse} />
           <ArgumentColumn side="Con" topic={conResponse} />
