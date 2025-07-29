@@ -2,31 +2,31 @@ import React, { useState } from "react";
 import ArgumentThread from "./ArgumentThread";
 import { getArgument } from "../utils/api";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from 'remark-gfm';
 
-export default function ArgumentBox({ topic, side }) {
-// export default function ArgumentBox({ topic, side, argumentIndex }) {
+export default function ArgumentBox({ topic, side, content }) {
   const [showThread, setShowThread] = useState(false);
-  const argumentData = getArgument(topic, side);
-  // const argumentData = getArgument(topic, side, argumentIndex);
 
   return (
     <div className="mb-6 p-4 border rounded-2xl shadow">
-      <h3 className="font-bold mb-2">{argumentData.title}</h3>
-      <div>
-        <ReactMarkdown>{argumentData.body}</ReactMarkdown>
-      </div>
-      {argumentData.body.map((para, idx) => (
-        <div key={idx} className="mb-2">
-          <ReactMarkdown>{para}</ReactMarkdown>
-        </div>
-      ))}
-      <div className="text-sm text-blue-700 underline mb-2">
-        Sources:
-        {argumentData.sources.map((src, idx) => (
-          // <a href={src} target="_blank" rel="noreferrer" className="block">{src}</a>
-          <a key={idx} href={src} target="_blank" rel="noreferrer" className="block">{src}</a>
-        ))}
-      </div>
+      <h3 className="font-bold mb-2">{side}</h3>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          a: ({ node, ...props }) => (
+            <a
+              {...props}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline"
+            />
+          ),
+          li: ({ children }) => <li className="mb-2">{children}</li>,
+          p: ({ children }) => <p className="mb-4">{children}</p>,
+        }}
+      >
+        {content}
+      </ReactMarkdown>
       <button
         onClick={() => setShowThread(true)}
         className="text-blue-500 underline mt-2"

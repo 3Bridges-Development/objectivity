@@ -17,6 +17,7 @@ export default function Home() {
   useEffect(() => {
     const stored = localStorage.getItem('chatHistory');
     if (stored) setHistory(JSON.parse(stored));
+    // clearHistory(); // add back above if we want history
   }, [])
 
   useEffect(() => {
@@ -100,7 +101,7 @@ export default function Home() {
       </form>
       {shouldShowClearButton ? (
         <div className="text-center">
-          <Button className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg rounded-xl" onPress={clearHistory}>Clear History</Button>
+          <Button className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg rounded-xl" onPress={clearHistory}>Clear History From Chats</Button>
         </div> 
       ) : null}
       {isSubmitInProgress && (
@@ -114,9 +115,8 @@ export default function Home() {
       )}
       {submitted && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-          {/* <ReactMarkdown>{response}</ReactMarkdown> */}
-          <ArgumentColumn side="Pro" topic={proResponse} />
-          <ArgumentColumn side="Con" topic={conResponse} />
+          <ArgumentColumn side="Pro" topic={topic} content={proResponse} />
+          <ArgumentColumn side="Con" topic={topic} content={conResponse} />
         </div>
       )}
     </div>

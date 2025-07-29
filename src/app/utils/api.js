@@ -1,9 +1,10 @@
-export function getArgument(topic, side, index) {
+export function getArgument(topic, side, content, index) {
+  console.log("CONTENT", content)
   return {
     title: `${side}`,
     // title: `${side} Argument ${index + 1}`,
     body: [
-      `Paragraph 1 of ${side} argument ${index + 1} for topic: ${topic}.`,
+      `Paragraph 1 of ${side} argument ${index + 1} for topic: ${topic}: ${content}`,
       `Paragraph 2 of ${side} argument ${index + 1}.`,
       `Paragraph 3 of ${side} argument ${index + 1}.`
     ],
