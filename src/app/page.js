@@ -16,13 +16,20 @@ export default function Home() {
 
   useEffect(() => {
     const stored = localStorage.getItem('chatHistory');
-    if (stored) setHistory(JSON.parse(stored));
+    if (stored !== "undefined") {
+      const localHistory = JSON.parse(stored);
+      setHistory(localHistory);
+    } else {
+      return
+    };
     // clearHistory(); // add back above if we want history
   }, [])
 
   useEffect(() => {
   localStorage.setItem('chatHistory', JSON.stringify(history));
-  setShouldShowClearButton(history.length === 0 ? false : true)
+  if (history) {
+    setShouldShowClearButton(history.length === 0 ? false : true)
+  }
 }, [history]);
 
   const handleSubmit = async (e) => {
@@ -115,7 +122,7 @@ export default function Home() {
       )}
       {submitted && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-          <ArgumentColumn side="Pro" topic={topic} content={proResponse} />
+          <ArgumentColumn side="Pro" topic={topic} content={proResponse} onArgument={getData} />
           <ArgumentColumn side="Con" topic={topic} content={conResponse} />
         </div>
       )}

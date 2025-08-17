@@ -4,7 +4,7 @@ import { getArgument } from "../utils/api";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from 'remark-gfm';
 
-export default function ArgumentBox({ topic, side, content }) {
+export default function ArgumentBox({ topic, side, content, onArgument }) {
   const [showThread, setShowThread] = useState(false);
 
   return (
@@ -35,7 +35,7 @@ export default function ArgumentBox({ topic, side, content }) {
       </button>
       {showThread && (
         <div className="mt-4 ml-4 border-l-2 border-gray-400 pl-4">
-          <ArgumentThread initialSide={side} initialTopic={topic} depth={1} />
+          <ArgumentThread initialSide={side} initialTopic={topic} depth={1} content={content} onArgument={onArgument} />
         </div>
       )}
     </div>

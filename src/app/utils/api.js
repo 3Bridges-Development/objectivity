@@ -1,30 +1,40 @@
-export function getArgument(topic, side, content, index) {
-  console.log("CONTENT", content)
-  return {
-    title: `${side}`,
-    // title: `${side} Argument ${index + 1}`,
-    body: [
-      `Paragraph 1 of ${side} argument ${index + 1} for topic: ${topic}: ${content}`,
-      `Paragraph 2 of ${side} argument ${index + 1}.`,
-      `Paragraph 3 of ${side} argument ${index + 1}.`
-    ],
-    sources: [
-      "https://example.com/source1",
-      "https://example.com/source2"
-    ]
-  };
+function saveHistory(entry) {
+  try {
+    const history = JSON.parse(localStorage.getItem("debateHistory") || "[]");
+    history.push(entry);
+    localStorage.setItem("debateHistory", JSON.stringify(history));
+  } catch (err) {
+    console.error("Failed to save history:", err);
+  }
 }
 
-export function getRebuttal(topic, side, depth) {
-  return {
-    body: [
-      `Rebuttal paragraph 1 from ${side} side at round ${depth}.`,
-      `Rebuttal paragraph 2 from ${side} side at round ${depth}.`,
-      `Rebuttal paragraph 3 from ${side} side at round ${depth}.`
-    ],
-    sources: [
-      "https://example.com/rebuttal1",
-      "https://example.com/rebuttal2"
-    ]
-  };
+export async function getArgument(topic, side) {
+  const res = await fetch("/api/argument", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ topic, side }),
+  });
+  const data = await res.json();
+  saveHistory({ type: "argument", topic, side, response: data, timestamp: Date.now() });
+  return data;
 }
+
+export async function getRebuttal(topic, side, depth) {
+  const res = await fetch("/api/rebuttal", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ topic, side, depth }),
+  });
+  const data = await res.json();
+  saveHistory({ type: "rebuttal", topic, side, depth, response: data, timestamp: Date.now() });
+  return data;
+}
+
+export function getHistory() {
+  try {
+    return JSON.parse(localStorage.getItem("debateHistory") || "[]");
+  } catch {
+    return [];
+  }
+}
+
